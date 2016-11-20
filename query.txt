@@ -20,3 +20,13 @@ SELECT a.member_name , sum(b.deposit_money)  "Total Deposit" FROM tbl_member a, 
 
 
 select a.member_name , sum(deposit_money) "Total Deposit Money" from tbl_member a left join tbl_deposit b on deposit_date like  "__-10-2016" and a.member_ID=b.member_ID group by member_name 
+
+create table tbl_cost(
+cost_ID integer primary key autoincrement,
+cost_amount real not null,
+cost_date varchar(50) not null,
+member_ID integer,
+foreign key(member_ID) references tbl_member(member_ID))
+
+
+select cost_date, sum(cost_amount) "Daily Cost",b.member_name from tbl_cost a, tbl_member b where a.member_ID=b.member_ID group by cost_date,member_name
