@@ -22,7 +22,7 @@ namespace Mess_Management_System
     /// </summary>
     public partial class MainWindow : Window
     {
-        public string current_date;
+
         string connectionString = "Data source=database.db;version=3";
         public MainWindow()
         {
@@ -192,6 +192,10 @@ namespace Mess_Management_System
             }
         }
 
+        //***************************************************************************
+        //             deposit section
+        //***************************************************************************
+
         int deposite_ID = 0;
         private void cmb_depositeMember_DropDownClosed(object sender, EventArgs e)
         {
@@ -211,12 +215,16 @@ namespace Mess_Management_System
 
                 conn.Close();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //MessageBox.Show(ex.Message);
             }
         }
 
+        /// <summary>
+        /// this method will insert deposit money of the member
+        /// </summary>
+        public string deposit_date;
         private void btn_deposit_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -225,13 +233,15 @@ namespace Mess_Management_System
                 {
                     SQLiteConnection conn = new SQLiteConnection(connectionString);
                     conn.Open();
-                    string query = "INSERT INTO tbl_deposit(deposit_money,deposit_date,member_ID) values('" + this.txt_depositemoney.Text + "','" + current_date + "','" + deposite_ID + "')";
+                    string query = "INSERT INTO tbl_deposit(deposit_money,deposit_date,member_ID) values('" + this.txt_depositemoney.Text + "','" + deposit_date + "','" + deposite_ID + "')";
                     SQLiteCommand command = new SQLiteCommand(query, conn);
                     command.ExecuteNonQuery();
                     conn.Close();
-                    MessageBox.Show("successfully", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Deposit successfull", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                     fillDepositDatagrid();
+                    fillDataGridMemberMonthlyTotal();
                     clearDepositTextBox();
+                    
                 }
                 else
                     MessageBox.Show("Please provide necessary information", "Message", MessageBoxButton.OK, MessageBoxImage.Asterisk);
@@ -242,6 +252,16 @@ namespace Mess_Management_System
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Date_picker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            DateTime ida = Convert.ToDateTime(Date_picker.SelectedDate);
+            deposit_date = ida.ToString("dd-MM-yyyy");
+        }
         private void clearDepositTextBox()
         {
             lbl_mobile.Content = "";
@@ -266,35 +286,34 @@ namespace Mess_Management_System
                 dg_deposit.ItemsSource = data.DefaultView;
                 conn.Close();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                MessageBox.Show(ex.Message);
+ 
             }
         }
 
-        private void Date_picker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
-        {
-            DateTime ida = Convert.ToDateTime(Date_picker.SelectedDate);
-            current_date = ida.ToString("dd-MM-yyyy");
-        }
-        string deposit_dateYear;
+
+        string deposit_MonthYear;
 
         private void datepickerForTotalDeposit_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             DateTime deposit_date = Convert.ToDateTime(datepickerForTotalDeposit.SelectedDate);
-            deposit_dateYear = deposit_date.ToString("-MM-yyyy");
+            deposit_MonthYear = deposit_date.ToString("-MM-yyyy");
             //MessageBox.Show(deposit_dateYear);
             fillDataGridMemberMonthlyTotal();
 
         }
 
+        /// <summary>
+        /// this method will show each member's total deposit in a month in the dataGrid
+        /// </summary>
         private void fillDataGridMemberMonthlyTotal()
         {
             try
             {
                 SQLiteConnection conn = new SQLiteConnection(connectionString);
                 conn.Open();
-                string query = "select a.member_name , sum(deposit_money) 'Total Deposit Money' from tbl_member a left join tbl_deposit b on deposit_date like  '" + "__" + deposit_dateYear + "' and a.member_ID=b.member_ID group by member_name";
+                string query = "select a.member_name , sum(deposit_money) 'Total Deposit Money' from tbl_member a left join tbl_deposit b on deposit_date like  '" + "__" + deposit_MonthYear + "' and a.member_ID=b.member_ID group by member_name";
                 SQLiteCommand command = new SQLiteCommand(query, conn);
                 SQLiteDataAdapter adapter = new SQLiteDataAdapter(command);
                 DataTable data = new DataTable();
@@ -305,6 +324,52 @@ namespace Mess_Management_System
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// this will update the deposit money of the member
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btn_updateDeposite_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(txt_depositemoney.Text))
+                {
+                    SQLiteConnection conn = new SQLiteConnection(connectionString);
+                    conn.Open();
+                    string query = "update tbl_deposit set deposit_money='" + this.txt_depositemoney.Text + "',deposit_date='" + this.deposit_date + "' where deposit_ID='" + deposit_ID + "'";
+                    SQLiteCommand command = new SQLiteCommand(query, conn);
+                    command.ExecuteNonQuery();
+                    conn.Close();
+                    MessageBox.Show("Update successfully", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                    txt_depositemoney.Clear();
+                    fillDepositDatagrid();
+                    fillDataGridMemberMonthlyTotal();
+                }
+                else
+                    MessageBox.Show("Please provide necessary information", "Message", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+            }
+            catch (SQLiteException ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        int deposit_ID = 0;
+        private void dg_deposit_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                object item = dg_deposit.SelectedItem;
+                deposit_ID = Convert.ToInt16((dg_deposit.SelectedCells[0].Column.GetCellContent(item) as TextBlock).Text);
+                txt_depositemoney.Text = (dg_deposit.SelectedCells[1].Column.GetCellContent(item) as TextBlock).Text;
+            }
+            catch (FormatException)
+            {
+                MessageBox.Show("Error");
             }
         }
 

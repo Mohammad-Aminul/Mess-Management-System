@@ -16,3 +16,6 @@ foreign key(member_ID) references tbl_member(member_ID))
 insert into tbl_deposit values(1000,19/11/2016,1)
 
 SELECT a.member_name , sum(b.deposit_money)  "Total Deposit" FROM tbl_member a, tbl_deposit b where b.member_ID= a.member_ID group by member_name
+
+
+select a.member_name , sum(deposit_money) "Total Deposit Money" from tbl_member a left join tbl_deposit b on deposit_date like  "__-10-2016" and a.member_ID=b.member_ID group by member_name 

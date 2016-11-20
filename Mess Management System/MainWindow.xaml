@@ -77,10 +77,10 @@
                             </StackPanel>
                             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2">
                                 <Button Width="100" Margin="0 0 10 0" Content="Deposite" Name="btn_deposit" ToolTip="Add Deposite information" Click="btn_deposit_Click"></Button>
-                                <Button Width="100" Margin="0 0 10 0" Name="btn_updateDeposite" ToolTip="Update Deposite information">Update</Button>
+                                <Button Width="100" Margin="0 0 10 0" Name="btn_updateDeposite" ToolTip="Update Deposite information" Click="btn_updateDeposite_Click">Update</Button>
                                 <Button Width="100" Margin="0 0 10 0" Name="btn_deleteDeposite" ToolTip="Delete Deposite information">Delete</Button>
                             </StackPanel>
-                            <DataGrid Name="dg_deposit" Margin="0,10,5,71" Grid.Row="2" Grid.Column="0"/>
+                            <DataGrid Name="dg_deposit" Margin="0,10,5,71" Grid.Row="2" Grid.Column="0" SelectionChanged="dg_deposit_SelectionChanged"/>
                             <StackPanel Grid.Row="2" Grid.Column="1">
                                 <Label FontWeight="Bold" Foreground="Red" Margin="10 10 0 0">Search total Deposit of the following month:</Label>
                                 <DatePicker Margin="10 10" Name="datepickerForTotalDeposit" SelectedDateChanged="datepickerForTotalDeposit_SelectedDateChanged"></DatePicker>
