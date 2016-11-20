@@ -8,6 +8,7 @@ room_no varchar(20))
 INSERT INTO tbl_member(member_name,mobile_no,room_no) values("Mohammad Aminul Islam","01916232841","701")
 
 create table tbl_deposit(
+deposit_ID integer primary key autoincremnt,
 deposit_money real not null,
 deposit_date varchar(40) not null,
 member_ID integer,

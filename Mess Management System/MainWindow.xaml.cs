@@ -214,6 +214,7 @@ namespace Mess_Management_System
                 }
 
                 conn.Close();
+                txt_depositemoney.Clear();
             }
             catch (Exception)
             {
@@ -241,7 +242,7 @@ namespace Mess_Management_System
                     fillDepositDatagrid();
                     fillDataGridMemberMonthlyTotal();
                     clearDepositTextBox();
-                    
+
                 }
                 else
                     MessageBox.Show("Please provide necessary information", "Message", MessageBoxButton.OK, MessageBoxImage.Asterisk);
@@ -267,6 +268,7 @@ namespace Mess_Management_System
             lbl_mobile.Content = "";
             lbl_room.Content = "";
             txt_depositemoney.Clear();
+            cmb_depositeMember.SelectedValue = "";
         }
 
         /// <summary>
@@ -288,7 +290,7 @@ namespace Mess_Management_System
             }
             catch (Exception)
             {
- 
+
             }
         }
 
@@ -336,7 +338,7 @@ namespace Mess_Management_System
         {
             try
             {
-                if (!string.IsNullOrWhiteSpace(txt_depositemoney.Text))
+                if (!string.IsNullOrWhiteSpace(txt_depositemoney.Text) && deposit_ID != 0)
                 {
                     SQLiteConnection conn = new SQLiteConnection(connectionString);
                     conn.Open();
@@ -345,32 +347,94 @@ namespace Mess_Management_System
                     command.ExecuteNonQuery();
                     conn.Close();
                     MessageBox.Show("Update successfully", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                    txt_depositemoney.Clear();
+                    clearDepositTextBox();
                     fillDepositDatagrid();
                     fillDataGridMemberMonthlyTotal();
+                    deposit_ID = 0;
                 }
                 else
-                    MessageBox.Show("Please provide necessary information", "Message", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                    MessageBox.Show("For update select a row from the Deposit table", "Message", MessageBoxButton.OK, MessageBoxImage.Asterisk);
             }
             catch (SQLiteException ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
-
-        int deposit_ID = 0;
+        /// <summary>
+        /// to update and delete deposit information this method will give the value of selected row
+        /// </summary>
+        int deposit_ID = 0, depositMemberID=0;
         private void dg_deposit_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             try
             {
                 object item = dg_deposit.SelectedItem;
                 deposit_ID = Convert.ToInt16((dg_deposit.SelectedCells[0].Column.GetCellContent(item) as TextBlock).Text);
+                depositMemberID = Convert.ToInt16((dg_deposit.SelectedCells[3].Column.GetCellContent(item) as TextBlock).Text);
                 txt_depositemoney.Text = (dg_deposit.SelectedCells[1].Column.GetCellContent(item) as TextBlock).Text;
+
+                SQLiteConnection conn = new SQLiteConnection(connectionString);
+                conn.Open();
+                string query = "select member_name,mobile_no,room_no from tbl_member where member_ID='" + this.depositMemberID + "'";
+                SQLiteCommand command = new SQLiteCommand(query, conn);
+                SQLiteDataReader data = command.ExecuteReader();
+                if (data.Read())
+                {
+                   cmb_depositeMember.SelectedValue=data.GetString(0);
+                   lbl_mobile.Content = data.GetString(1);
+                   lbl_room.Content = data.GetString(2);
+                }
+
+                conn.Close();
             }
             catch (FormatException)
             {
                 MessageBox.Show("Error");
             }
+        }
+
+        /// <summary>
+        /// this method will delete the selected row from the datagrid
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btn_deleteDeposite_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (deposit_ID != 0)
+                {
+                    if (MessageBox.Show("Are you sure?", "Warning", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+                    {
+                        SQLiteConnection conn = new SQLiteConnection(connectionString);
+                        conn.Open();
+                        string query = "Delete from tbl_deposit where deposit_ID='" + deposit_ID + "'";
+                        SQLiteCommand command = new SQLiteCommand(query, conn);
+                        command.ExecuteNonQuery();
+                        conn.Close();
+                        clearDepositTextBox();
+                        fillDepositDatagrid();
+                        fillDataGridMemberMonthlyTotal();
+                        deposit_ID = 0;
+                    }
+                }
+                else
+                    MessageBox.Show("To delete select a row from the Deposit table", "Message", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+
+        /// <summary>
+        /// this will clear the value of the deposit form
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btn_clearDeposite_Click(object sender, RoutedEventArgs e)
+        {
+            clearDepositTextBox();
         }
 
 
