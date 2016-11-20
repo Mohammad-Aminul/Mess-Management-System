@@ -1,0 +1,18 @@
+create table tbl_member(
+member_ID integer primary key autoincrement,
+member_name varchar(200) not null,
+mobile_no varchar(50),
+room_no varchar(20))
+
+
+INSERT INTO tbl_member(member_name,mobile_no,room_no) values("Mohammad Aminul Islam","01916232841","701")
+
+create table tbl_deposit(
+deposit_money real not null,
+deposit_date varchar(40) not null,
+member_ID integer,
+foreign key(member_ID) references tbl_member(member_ID))
+
+insert into tbl_deposit values(1000,19/11/2016,1)
+
+SELECT a.member_name , sum(b.deposit_money)  "Total Deposit" FROM tbl_member a, tbl_deposit b where b.member_ID= a.member_ID group by member_name
