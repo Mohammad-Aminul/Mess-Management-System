@@ -33,6 +33,7 @@ namespace Mess_Management_System
             fillMemberComboBox();
             fillDepositDatagrid();
             datepickerForTotalDeposit.SelectedDate = DateTime.Now;
+            datepicker_monthlyDepositCost.SelectedDate = DateTime.Now;
             fillCostdataGrid();
             fillDailyTotalCostDataGrid();
             fun_totalCostofMonth();
@@ -546,21 +547,29 @@ namespace Mess_Management_System
                 //MessageBox.Show(ex.Message);
             }
         }
-        double val_totalCostofMonth = 0;
+
         private void fun_totalCostofMonth()
         {
             try
             {
                 SQLiteConnection conn = new SQLiteConnection(connectionString);
                 conn.Open();
-                string query = "select sum(cost_amount) from tbl_cost where cost_date  like '__-11-2016'";
+                string query = "select count(*),sum(cost_amount) from tbl_cost where cost_date  like '" + "__" + depositcostdate + "'";
                 SQLiteCommand command = new SQLiteCommand(query, conn);
                 SQLiteDataReader data = command.ExecuteReader();
                 if (data.Read())
                 {
-                    lbl_totalCost.Content = data.GetDouble(0);
-                    val_totalCostofMonth = data.GetDouble(0);
+                    int counter = data.GetInt16(0);
+
+                    if (counter > 0)
+                    {
+                        lbl_totalCost.Content = data.GetDouble(1);
+
+                    }
+                    else
+                        lbl_totalCost.Content = 0;
                 }
+
                 conn.Close();
             }
             catch (Exception ex)
@@ -569,8 +578,48 @@ namespace Mess_Management_System
             }
         }
 
+        private void fun_totalDepositofMonth()
+        {
+
+            try
+            {
+                SQLiteConnection conn = new SQLiteConnection(connectionString);
+                conn.Open();
+                string query = "select count(*),sum(deposit_money) from tbl_deposit where deposit_date  like'" + "__" + depositcostdate + "'";
+                SQLiteCommand command = new SQLiteCommand(query, conn);
+                SQLiteDataReader data = command.ExecuteReader();
+                if (data.Read())
+                {
+                    int row = data.GetInt16(0);
+                    if (row > 0)
+                    {
+                        lbl_totalDeposit.Content = data.GetDouble(1);
+                    }
+                    else
+                        lbl_totalDeposit.Content = 0;
+
+                }
+                conn.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "    tdeposit");
+            }
+        }
+
         private void fun_mealRateCalculation()
         {
+
+        }
+
+        string depositcostdate;
+        private void datepicker_monthlyDepositCost_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+            DateTime depcost = Convert.ToDateTime(datepicker_monthlyDepositCost.SelectedDate);
+            depositcostdate = depcost.ToString("-MM-yyyy");
+            fun_totalCostofMonth();
+            fun_totalDepositofMonth();
 
         }
 

@@ -136,20 +136,26 @@
                         <StackPanel Grid.Row="0" Grid.Column="1">
                             <Grid>
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="45"/>
-                                    <RowDefinition Height="45"/>
-                                    <RowDefinition Height="45"/>
+                                    <RowDefinition Height="30"/>
+                                    <RowDefinition Height="30"/>
+                                    <RowDefinition Height="30"/>
+                                    <RowDefinition Height="30"/>
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="20*"/>
                                     <ColumnDefinition Width="50*"/>
                                 </Grid.ColumnDefinitions>
-                                <Label FontSize="20" FontStyle="Normal" FontFamily="Times New Romans" Foreground="Red" FontWeight="Bold"  Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right">Total Cost:</Label>
-                                <Label Name="lbl_totalCost" FontSize="20" FontStyle="Normal" FontFamily="Times New Romans" Foreground="Red" FontWeight="Bold" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left"></Label>
-                                <Label FontSize="20" FontStyle="Normal" FontFamily="Times New Romans" Foreground="Red" FontWeight="Bold"  Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right">Total Meal:</Label>
-                                <Label Name="lbl_totalMeal" FontSize="20" FontStyle="Normal" FontFamily="Times New Romans" Foreground="Red" FontWeight="Bold" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left"></Label>
-                                <Label FontSize="20" FontStyle="Normal" FontFamily="Times New Romans" Foreground="Red" FontWeight="Bold"  Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right">Meal Rate:</Label>
-                                <Label Name="lbl_mealRate" FontSize="20" FontStyle="Normal" FontFamily="Times New Romans" Foreground="Red" FontWeight="Bold" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left"></Label>
+                                <DatePicker Name="datepicker_monthlyDepositCost" Grid.Row="0" Grid.Column="0" SelectedDateChanged="datepicker_monthlyDepositCost_SelectedDateChanged"></DatePicker>
+                                <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+                                    <Label>Total Deposit:</Label>
+                                    <Label Name="lbl_totalDeposit"></Label>
+                                </StackPanel>
+                                <Label FontSize="18" FontStyle="Normal" FontFamily="Times New Romans" Foreground="Red" FontWeight="Bold"  Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right">Total Cost:</Label>
+                                <Label Name="lbl_totalCost" FontSize="18" FontStyle="Normal" FontFamily="Times New Romans" Foreground="Red" FontWeight="Bold" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left"></Label>
+                                <Label FontSize="18" FontStyle="Normal" FontFamily="Times New Romans" Foreground="Red" FontWeight="Bold"  Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right">Total Meal:</Label>
+                                <Label Name="lbl_totalMeal" FontSize="18" FontStyle="Normal" FontFamily="Times New Romans" Foreground="Red" FontWeight="Bold" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left"></Label>
+                                <Label FontSize="18" FontStyle="Normal" FontFamily="Times New Romans" Foreground="Red" FontWeight="Bold"  Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right">Meal Rate:</Label>
+                                <Label Name="lbl_mealRate" FontSize="18" FontStyle="Normal" FontFamily="Times New Romans" Foreground="Red" FontWeight="Bold" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left"></Label>
                             </Grid>
                         </StackPanel>
                         <StackPanel Grid.Row="1" Grid.Column="1">
