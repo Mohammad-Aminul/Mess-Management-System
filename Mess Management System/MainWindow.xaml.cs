@@ -201,7 +201,7 @@ namespace Mess_Management_System
         //             deposit section
         //***************************************************************************
 
-        int deposite_ID = 0;
+        int depositeMember_ID = 0;
         private void cmb_depositeMember_DropDownClosed(object sender, EventArgs e)
         {
             try
@@ -213,7 +213,7 @@ namespace Mess_Management_System
                 SQLiteDataReader data = command.ExecuteReader();
                 if (data.Read())
                 {
-                    deposite_ID = data.GetInt16(0);
+                    depositeMember_ID = data.GetInt16(0);
                     lbl_mobile.Content = data.GetString(1);
                     lbl_room.Content = data.GetString(2);
                 }
@@ -236,11 +236,11 @@ namespace Mess_Management_System
         {
             try
             {
-                if (!string.IsNullOrWhiteSpace(txt_depositemoney.Text) && !string.IsNullOrWhiteSpace(cmb_depositeMember.Text))
+                if (!string.IsNullOrWhiteSpace(txt_depositemoney.Text) && !string.IsNullOrWhiteSpace(cmb_depositeMember.Text) && depositeMember_ID != 0)
                 {
                     SQLiteConnection conn = new SQLiteConnection(connectionString);
                     conn.Open();
-                    string query = "INSERT INTO tbl_deposit(deposit_money,deposit_date,member_ID) values('" + this.txt_depositemoney.Text + "','" + deposit_date + "','" + deposite_ID + "')";
+                    string query = "INSERT INTO tbl_deposit(deposit_money,deposit_date,member_ID) values('" + this.txt_depositemoney.Text + "','" + deposit_date + "','" + depositeMember_ID + "')";
                     SQLiteCommand command = new SQLiteCommand(query, conn);
                     command.ExecuteNonQuery();
                     conn.Close();
@@ -248,10 +248,11 @@ namespace Mess_Management_System
                     fillDepositDatagrid();
                     fillDataGridMemberMonthlyTotal();
                     clearDepositTextBox();
+                    depositeMember_ID = 0;
 
                 }
                 else
-                    MessageBox.Show("Please provide necessary information", "Message", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                    MessageBox.Show("To deposit, select a name from dropdown list and insert the deposit amount.", "Message", MessageBoxButton.OK, MessageBoxImage.Asterisk);
             }
             catch (SQLiteException ex)
             {
@@ -359,7 +360,7 @@ namespace Mess_Management_System
                     deposit_ID = 0;
                 }
                 else
-                    MessageBox.Show("For update select a row from the Deposit table", "Message", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                    MessageBox.Show("To update, select a row from the Deposit table", "Message", MessageBoxButton.OK, MessageBoxImage.Asterisk);
             }
             catch (SQLiteException ex)
             {
@@ -408,7 +409,7 @@ namespace Mess_Management_System
         {
             try
             {
-                if (deposit_ID != 0)
+                if (deposit_ID != 0 && !string.IsNullOrEmpty(txt_depositemoney.Text))
                 {
                     if (MessageBox.Show("Are you sure?", "Warning", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
                     {
@@ -425,7 +426,7 @@ namespace Mess_Management_System
                     }
                 }
                 else
-                    MessageBox.Show("To delete select a row from the Deposit table", "Message", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                    MessageBox.Show("To delete, select a row from the Deposit table", "Message", MessageBoxButton.OK, MessageBoxImage.Asterisk);
             }
             catch (Exception)
             {

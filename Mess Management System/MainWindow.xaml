@@ -61,16 +61,16 @@
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical">
                                 <Label HorizontalAlignment="Right" Margin="5" Content="Name:"></Label>
-                                <Label HorizontalAlignment="Right" Margin="5" Content="Mobile No.:"></Label>
+                                <Label HorizontalAlignment="Right" Margin="5 3 5 5" Content="Mobile No.:"></Label>
                                 <Label HorizontalAlignment="Right" Margin="5" Content="Room No.:"></Label>
                                 <Label HorizontalAlignment="Right" Margin="5" Content="Deposit Money:"></Label>
                                 <Label HorizontalAlignment="Right" Margin="5" Content="Date:"></Label>
                             </StackPanel>
                             <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Vertical">
                                 <ComboBox Name="cmb_depositeMember" Margin="5" DropDownClosed="cmb_depositeMember_DropDownClosed"/>
-                                <Label Margin="10 10 5 5" Content="" Name="lbl_mobile"></Label>
+                                <Label Margin="5 4 5 5" Content="" Name="lbl_mobile"></Label>
                                 <Label Margin="10 8 5 5" Content="" Name="lbl_room"></Label>
-                                <TextBox Margin="10 0 20 0" Name="txt_depositemoney"></TextBox>
+                                <TextBox Margin="10 2 20 0" Name="txt_depositemoney"></TextBox>
                                 <DatePicker IsTodayHighlighted="True"  Name="Date_picker" Margin="10 15 20 0" SelectedDateChanged="Date_picker_SelectedDateChanged">
 
                                 </DatePicker>
