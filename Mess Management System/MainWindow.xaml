@@ -27,12 +27,12 @@
                                 <StackPanel Grid.Row="0" Grid.Column="0">
                                     <Label HorizontalAlignment="Right" Margin="5" Content="Name:"></Label>
                                     <Label HorizontalAlignment="Right" Margin="5" Content="Mobile No.:"></Label>
-                                    <Label Margin="5" HorizontalAlignment="Right" Content="Room No.:"></Label>
+                                    <Label Margin="0,5,5,5" HorizontalAlignment="Right" Content="Room No.:"></Label>
                                 </StackPanel>
                                 <StackPanel Grid.Row="0" Grid.Column="1">
-                                    <TextBox Margin="7" Name="txt_name"></TextBox>
+                                    <TextBox Margin="7 10" Name="txt_name"></TextBox>
                                     <TextBox Margin="7" Name="txt_mobile"></TextBox>
-                                    <TextBox Margin="7" Name="txt_room"></TextBox>
+                                    <TextBox Margin="7 10" x:Name="txt_room"/>
                                 </StackPanel>
                                 <StackPanel HorizontalAlignment="Center" Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal">
                                     <Button Margin="7" Width="80"  Content="Add Member" Name="btn_addMember" ToolTip="Add new member in the mess" Click="btn_addMember_Click"></Button>
@@ -119,19 +119,19 @@
                                     <Label Margin="5" HorizontalAlignment="Right">Date:</Label>
                                 </StackPanel>
                                 <StackPanel Grid.Row="0" Grid.Column="1">
-                                    <ComboBox Margin="8" Name="cmb_spentBy" IsEditable="False" DropDownClosed="cmb_spentBy_DropDownClosed" ToolTip="Select a member who has spent money."></ComboBox>
+                                    <ComboBox Margin="8" x:Name="cbo_spentBy" IsEditable="False" DropDownClosed="cmb_spentBy_DropDownClosed" ToolTip="Select a member who has spent money."></ComboBox>
                                     <TextBox Margin="8" Name="txt_costAmount"></TextBox>
                                     <DatePicker Margin="8" x:Name="cost_Date_picker" SelectedDateChanged="cost_Date_picker_SelectedDateChanged"/>
                                 </StackPanel>
                                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2">
-                                    <Button Width="60" HorizontalAlignment="Center" Margin="8" Name="btn_costSave" ToolTip="Save information of today's cost" Click="btn_costSave_Click">Save</Button>
-                                    <Button Width="60" HorizontalAlignment="Center" x:Name="btn_costUpadte" Margin="8" Content="Update" ToolTip="Update information of today's cost"/>
-                                    <Button Width="60" HorizontalAlignment="Center" Margin="8" Name="btn_costDelete" ToolTip="Delete information of today's cost">Delete</Button>
+                                    <Button Height="30" Width="70" HorizontalAlignment="Center" Margin="8" Name="btn_costSave" ToolTip="Save information of today's cost" Click="btn_costSave_Click">Save</Button>
+                                    <Button Height="30" Width="70" HorizontalAlignment="Center" x:Name="btn_costUpadte" Margin="8" Content="Update" ToolTip="Update information of today's cost" Click="btn_costUpadte_Click"/>
+                                    <Button Height="30" Width="70" HorizontalAlignment="Center" Margin="8" Name="btn_costDelete" ToolTip="Delete information of today's cost" Click="btn_costDelete_Click">Delete</Button>
                                 </StackPanel>
                             </Grid>
                         </StackPanel>
                         <StackPanel Grid.Row="1" Grid.Column="0">
-                            <DataGrid Margin="5" Height="218" Name="dg_showCost"></DataGrid>
+                            <DataGrid Margin="5" Height="218" Name="dg_showDailyCostbymember" SelectionChanged="dg_showDailyCostbymember_SelectionChanged"></DataGrid>
                         </StackPanel>
                         <StackPanel Grid.Row="0" Grid.Column="1">
                             <Grid>

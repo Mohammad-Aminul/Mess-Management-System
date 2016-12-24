@@ -13,3 +13,17 @@ D:\WPF project\Mess Management System\Mess Management System\obj\Debug\Mess Mana
 D:\WPF project\Mess Management System\Mess Management System\obj\Debug\Mess Management System.pdb
 D:\WPF project\Mess Management System\Mess Management System\bin\Debug\System.Data.SQLite.dll
 D:\WPF project\Mess Management System\Mess Management System\bin\Debug\System.Data.SQLite.xml
+E:\WPF project\Mess Management System\Mess Management System\bin\Debug\Mess Management System.exe.config
+E:\WPF project\Mess Management System\Mess Management System\obj\Debug\Mess Management System.exe
+E:\WPF project\Mess Management System\Mess Management System\obj\Debug\Mess Management System.pdb
+E:\WPF project\Mess Management System\Mess Management System\bin\Debug\Mess Management System.exe
+E:\WPF project\Mess Management System\Mess Management System\bin\Debug\Mess Management System.pdb
+E:\WPF project\Mess Management System\Mess Management System\bin\Debug\System.Data.SQLite.xml
+E:\WPF project\Mess Management System\Mess Management System\obj\Debug\Mess Management System.csprojResolveAssemblyReference.cache
+E:\WPF project\Mess Management System\Mess Management System\obj\Debug\MainWindow.baml
+E:\WPF project\Mess Management System\Mess Management System\obj\Debug\MainWindow.g.cs
+E:\WPF project\Mess Management System\Mess Management System\obj\Debug\App.g.cs
+E:\WPF project\Mess Management System\Mess Management System\obj\Debug\Mess Management System_MarkupCompile.cache
+E:\WPF project\Mess Management System\Mess Management System\obj\Debug\Mess Management System.g.resources
+E:\WPF project\Mess Management System\Mess Management System\obj\Debug\Mess_Management_System.Properties.Resources.resources
+E:\WPF project\Mess Management System\Mess Management System\obj\Debug\Mess Management System.csproj.GenerateResource.Cache

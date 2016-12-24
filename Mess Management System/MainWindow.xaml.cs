@@ -34,8 +34,8 @@ namespace Mess_Management_System
             fillDepositDatagrid();
             datepickerForTotalDeposit.SelectedDate = DateTime.Now;
             datepicker_monthlyDepositCost.SelectedDate = DateTime.Now;
-            fillCostdataGrid();
-            fillDailyTotalCostDataGrid();
+            RefreshCostDataGridView();
+            RefreshDailyTotalCostDataGridView();
             fun_totalCostofMonth();
         }
         /// <summary>
@@ -46,6 +46,7 @@ namespace Mess_Management_System
             try
             {
                 cmb_depositeMember.Items.Clear();
+                cbo_spentBy.Items.Clear();
                 SQLiteConnection conn = new SQLiteConnection(connectionString);
                 conn.Open();
                 string query = "select member_name from tbl_member";
@@ -54,7 +55,7 @@ namespace Mess_Management_System
                 while (data.Read())
                 {
                     cmb_depositeMember.Items.Add(data.GetString(0));
-                    cmb_spentBy.Items.Add(data.GetString(0));
+                    cbo_spentBy.Items.Add(data.GetString(0));
                 }
 
                 conn.Close();
@@ -107,7 +108,8 @@ namespace Mess_Management_System
                     MessageBox.Show("Member added successfully", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                     fildatagrid();
                     fillMemberComboBox();
-                    clearMemberAddTextBox();
+                    RefreshMemberAddForm();
+                    
                 }
                 else
                     MessageBox.Show("Please provide necessary information", "Message", MessageBoxButton.OK, MessageBoxImage.Asterisk);
@@ -121,7 +123,7 @@ namespace Mess_Management_System
         /// <summary>
         /// it will clear the textBox of new member add form
         /// </summary>
-        private void clearMemberAddTextBox()
+        private void RefreshMemberAddForm()
         {
             txt_name.Clear();
             txt_room.Clear();
@@ -160,7 +162,7 @@ namespace Mess_Management_System
                     MessageBox.Show("Member Update successfully", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                     fildatagrid();
                     fillMemberComboBox();
-                    clearMemberAddTextBox();
+                    RefreshMemberAddForm();
                 }
                 else
                     MessageBox.Show("Please provide necessary information", "Message", MessageBoxButton.OK, MessageBoxImage.Asterisk);
@@ -186,7 +188,7 @@ namespace Mess_Management_System
                     MessageBox.Show("Member Deleted successfully", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                     fildatagrid();
                     fillMemberComboBox();
-                    clearMemberAddTextBox();
+                    RefreshMemberAddForm();
                 }
                 else
                     MessageBox.Show("Please provide necessary information", "Message", MessageBoxButton.OK, MessageBoxImage.Asterisk);
@@ -322,7 +324,7 @@ namespace Mess_Management_System
             {
                 SQLiteConnection conn = new SQLiteConnection(connectionString);
                 conn.Open();
-                string query = "select a.member_name , sum(deposit_money) 'Total Deposit Money' from tbl_member a left join tbl_deposit b on deposit_date like  '" + "__" + deposit_MonthYear + "' and a.member_ID=b.member_ID group by member_name";
+                string query = "select a.member_name 'Member Name' , sum(deposit_money) 'Total Deposit Money' from tbl_member a left join tbl_deposit b on deposit_date like  '" + "__" + deposit_MonthYear + "' and a.member_ID=b.member_ID group by member_name";
                 SQLiteCommand command = new SQLiteCommand(query, conn);
                 SQLiteDataAdapter adapter = new SQLiteDataAdapter(command);
                 DataTable data = new DataTable();
@@ -448,11 +450,17 @@ namespace Mess_Management_System
         //*********************************************************************
         //                     Cost section
         //*********************************************************************
+        private void RefreshCostForm()
+        {
+            txt_costAmount.Clear();
+            cbo_spentBy.SelectedIndex = -1;
+            
+        }
         private void btn_costSave_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                if (!string.IsNullOrWhiteSpace(cmb_spentBy.Text) && !string.IsNullOrWhiteSpace(txt_costAmount.Text))
+                if (!string.IsNullOrWhiteSpace(cbo_spentBy.Text) && !string.IsNullOrWhiteSpace(txt_costAmount.Text))
                 {
                     SQLiteConnection conn = new SQLiteConnection(connectionString);
                     conn.Open();
@@ -461,8 +469,9 @@ namespace Mess_Management_System
                     command.ExecuteNonQuery();
                     conn.Close();
                     MessageBox.Show("cost save successfull", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                    fillCostdataGrid();
-                    fillDailyTotalCostDataGrid();
+                    RefreshCostDataGridView();
+                    RefreshDailyTotalCostDataGridView();
+                    RefreshCostForm();
                 }
                 else
                     MessageBox.Show("Please provide necessary information", "Message", MessageBoxButton.OK, MessageBoxImage.Asterisk);
@@ -474,18 +483,18 @@ namespace Mess_Management_System
         }
 
 
-        private void fillCostdataGrid()
+        private void RefreshCostDataGridView()
         {
             try
             {
                 SQLiteConnection conn = new SQLiteConnection(connectionString);
                 conn.Open();
-                string query = "select cost_date 'Date of Cost', sum(cost_amount) 'Daily Cost By a Member',b.member_name 'Name of Member' from tbl_cost a, tbl_member b where a.member_ID=b.member_ID group by cost_date,member_name";
+                string query = "select cost_ID 'Cost ID',cost_date 'Date of Cost', sum(cost_amount) 'Daily Cost',b.member_name 'Member Name' from tbl_cost a, tbl_member b where a.member_ID=b.member_ID group by cost_date,member_name";
                 SQLiteCommand command = new SQLiteCommand(query, conn);
                 SQLiteDataAdapter adapter = new SQLiteDataAdapter(command);
                 DataTable data = new DataTable("tbl_cost");
                 adapter.Fill(data);
-                dg_showCost.ItemsSource = data.DefaultView;
+                dg_showDailyCostbymember.ItemsSource = data.DefaultView;
                 conn.Close();
             }
             catch (Exception)
@@ -494,7 +503,7 @@ namespace Mess_Management_System
             }
         }
 
-        private void fillDailyTotalCostDataGrid()
+        private void RefreshDailyTotalCostDataGridView()
         {
             try
             {
@@ -531,16 +540,14 @@ namespace Mess_Management_System
             {
                 SQLiteConnection conn = new SQLiteConnection(connectionString);
                 conn.Open();
-                string query = "select member_ID from tbl_member where member_name='" + this.cmb_spentBy.Text + "'";
+                string query = "select member_ID from tbl_member where member_name='" + this.cbo_spentBy.Text + "'";
                 SQLiteCommand command = new SQLiteCommand(query, conn);
                 SQLiteDataReader data = command.ExecuteReader();
                 if (data.Read())
                 {
                     costby_ID = data.GetInt16(0);
                 }
-
                 conn.Close();
-
                 txt_costAmount.Clear();
             }
             catch (Exception)
@@ -565,12 +572,10 @@ namespace Mess_Management_System
                     if (counter > 0)
                     {
                         lbl_totalCost.Content = data.GetDouble(1);
-
                     }
                     else
                         lbl_totalCost.Content = 0;
                 }
-
                 conn.Close();
             }
             catch (Exception ex)
@@ -598,7 +603,6 @@ namespace Mess_Management_System
                     }
                     else
                         lbl_totalDeposit.Content = 0;
-
                 }
                 conn.Close();
             }
@@ -618,11 +622,77 @@ namespace Mess_Management_System
         {
 
             DateTime depcost = Convert.ToDateTime(datepicker_monthlyDepositCost.SelectedDate);
-            depositcostdate = depcost.ToString("-MM-yyyy");
+            depositcostdate = depcost.ToString("-MM-yyyy"); //return month and year of deposit and cost
             fun_totalCostofMonth();
             fun_totalDepositofMonth();
 
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        int selectedCostID_fromDG = 0;
+        private void dg_showDailyCostbymember_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            object row = dg_showDailyCostbymember.SelectedItem;
+            selectedCostID_fromDG = Convert.ToInt16((dg_showDailyCostbymember.SelectedCells[0].Column.GetCellContent(row) as TextBlock).Text);
+            txt_costAmount.Text = (dg_showDailyCostbymember.SelectedCells[2].Column.GetCellContent(row) as TextBlock).Text;
+            cbo_spentBy.SelectedItem = (dg_showDailyCostbymember.SelectedCells[3].Column.GetCellContent(row) as TextBlock).Text;
+        }
+
+        private void btn_costUpadte_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(cbo_spentBy.Text) && !string.IsNullOrWhiteSpace(txt_costAmount.Text))
+                {
+                    SQLiteConnection conn = new SQLiteConnection(connectionString);
+                    conn.Open();
+                    string query = "update tbl_cost set cost_amount='"+txt_costAmount.Text+"' where cost_ID='" + selectedCostID_fromDG + "'";
+                    SQLiteCommand command = new SQLiteCommand(query, conn);
+                    command.ExecuteNonQuery();
+                    conn.Close();
+                    MessageBox.Show("Data Update Successfull", "Success Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                    RefreshCostDataGridView();
+                    RefreshDailyTotalCostDataGridView();
+                    RefreshCostForm();
+                }
+                else
+                    MessageBox.Show("Please Select a name from table", "Error", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+            }
+            catch (SQLiteException ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void btn_costDelete_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(cbo_spentBy.Text) && !string.IsNullOrWhiteSpace(txt_costAmount.Text))
+                {
+                    SQLiteConnection conn = new SQLiteConnection(connectionString);
+                    conn.Open();
+                    string query = "Delete from tbl_cost where cost_ID='" + selectedCostID_fromDG + "'";
+                    SQLiteCommand command = new SQLiteCommand(query, conn);
+                    command.ExecuteNonQuery();
+                    conn.Close();
+                    MessageBox.Show("Data Delete Successfull", "Success Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                    RefreshCostDataGridView();
+                    RefreshDailyTotalCostDataGridView();
+                    RefreshCostForm();
+                }
+                else
+                    MessageBox.Show("Please Select a name from table", "Error", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+            }
+            catch (SQLiteException ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+       
 
 
     }
